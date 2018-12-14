@@ -35,15 +35,15 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
 
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
-            // Configure the view.
+            // 配置视图
             let skView = self.view as! SKView
             skView.showsFPS = true
             skView.showsNodeCount = true
             
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
+            /* Sprite Kit应用额外的优化来提高渲染性能 */
             skView.ignoresSiblingOrder = true
             
-            /* Set the scale mode to scale to fit the window */
+            /* 设置缩放模式以适应窗口 */
             scene.scaleMode = .aspectFill
             
             skView.presentScene(scene)
@@ -64,7 +64,7 @@ class GameViewController: UIViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
+        // 释放任何未使用的缓存数据、图像等。
     }
     
 }

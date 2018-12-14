@@ -8,7 +8,7 @@
 //布置场景
 
 import SpriteKit
-
+//备注：SKPhysicsContactDelegate是代理协议
 class GameScene: SKScene, SKPhysicsContactDelegate{
     
     
@@ -46,7 +46,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         canRestart = true
         
         //给场景添加一个物理体，限制了游戏范围，确保精灵不会跑出屏幕
-        self.physicsBody = SKPhysicsBody(edgeLoopFrom:self.frame)
+       // self.physicsBody = SKPhysicsBody(edgeLoopFrom:self.frame)
         // 设置重力
         self.physicsWorld.gravity = CGVector( dx: 0.0, dy: -5.0 )
         //物理世界的触碰检测代理为场景自己
@@ -144,6 +144,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         bird.physicsBody?.allowsRotation = false
         bird.physicsBody?.categoryBitMask = birdCategory
         bird.physicsBody?.contactTestBitMask = worldCategory | pipeCategory
+        //设置小鸟受外力影响的属性值
         //isDynamic的作用是设置这个物理体当前是否会受到物理环境的影响，默认是true
         bird.physicsBody?.isDynamic = true
         bird.physicsBody?.collisionBitMask = worldCategory | pipeCategory
@@ -203,6 +204,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         pipeUp.physicsBody?.contactTestBitMask = birdCategory
         pipePair.addChild(pipeUp)
         
+        //用于加分的隐藏题，在越过管道的瞬间碰撞，然后记分+1
         let contactNode = SKNode()
         contactNode.position = CGPoint( x: pipeDown.size.width + bird.size.width / 2, y: self.frame.midY )
         contactNode.physicsBody = SKPhysicsBody(rectangleOf: CGSize( width: pipeUp.size.width, height: self.frame.size.height ))
@@ -251,7 +253,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
     
     override func update(_ currentTime: TimeInterval) {
-        /* Called before each frame is rendered */
+        /* 在每帧呈现之前调用，调整让头先碰到地面 */
         let value = bird.physicsBody!.velocity.dy * ( bird.physicsBody!.velocity.dy < 0 ? 0.003 : 0.001 )
         bird.zRotation = min( max(-1, value), 0.5 )
     }
@@ -259,14 +261,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     func didBegin(_ contact: SKPhysicsContact) {
         if moving.speed > 0 {
             if ( contact.bodyA.categoryBitMask & scoreCategory ) == scoreCategory || ( contact.bodyB.categoryBitMask & scoreCategory ) == scoreCategory {
-                // Bird has contact with score entity
+                //   将小鸟飞行与score链接起来
                 score += 1
                 scoreLabelNode.text = String(score)
                 
-                // Add a little visual feedback for the score increment
+                // 为分数增量添加一些视觉反馈
                 scoreLabelNode.run(SKAction.sequence([SKAction.scale(to: 1.5, duration:TimeInterval(0.1)), SKAction.scale(to: 1.0, duration:TimeInterval(0.1))]))
             } else {
-                
+                //碰到管道就停下来
                 moving.speed = 0
                 
                 bird.physicsBody?.collisionBitMask = worldCategory
