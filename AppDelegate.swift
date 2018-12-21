@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  FlappyBird
 //
-//  Created by Nate Murray on 6/2/14.
+//  Created by Nate Murray on 21/11/18.
 //  Copyright (c) 2014 Fullstack.io. All rights reserved.
 //
 
